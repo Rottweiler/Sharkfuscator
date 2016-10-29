@@ -2,24 +2,58 @@
 using dnlib.DotNet.Emit;
 using dnlib.DotNet.Writer;
 using Sharkfuscator.ConfuserEx;
-using Sharkfuscator.Methods.Stubs;
-using System;
+using Sharkfuscator.Protections.Stubs;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+using System;
 
-namespace Sharkfuscator.Methods
+namespace Sharkfuscator.Protections
 {
     /*
      * Credits: XenoCodeRCE
      * Source: https://github.com/XenocodeRCE/AntiTamperEOF
      */
-    public static class EOF_Anti_Tamper
+    public class EOF_Anti_Tamper : iProtection
     {
+        public string description
+        {
+            get
+            {
+                return "Anti-tamper protection coded by XenoCodeRCE. Adds hash to EOF and compares it on run.";
+            }
+        }
 
-        public static void InjectAntiTamper(Stream stream)
+        public string name
+        {
+            get
+            {
+                return "EOF Anti-Tamper";
+            }
+        }
+
+        public string author
+        {
+            get
+            {
+                return "XenoCodeRCE";
+            }
+        }
+
+        public string init_message
+        {
+            get
+            {
+                return "Injecting anti-tamper class..";
+            }
+        }
+
+        public void Protect(Stream stream)
+        {
+            InjectAntiTamper(stream);
+        }
+
+        private void InjectAntiTamper(Stream stream)
         {
             ModuleDefMD mod = ModuleDefMD.Load(stream);
             AddCall(mod);
@@ -44,7 +78,7 @@ namespace Sharkfuscator.Methods
             stream.Position = 0;
         }
 
-       public static void InjectHash(string filename)
+        public static void InjectHash(string filename)
         {
             //We get the md5 as byte, of the target
             byte[] md5bytes = System.Security.Cryptography.MD5.Create().ComputeHash(System.IO.File.ReadAllBytes(filename));
@@ -56,7 +90,7 @@ namespace Sharkfuscator.Methods
             }
         }
 
-        private static void AddCall(ModuleDef module)
+        private void AddCall(ModuleDef module)
         {
             //We declare our Module, here we want to load the EOFAntitamp class, from AntiTamperEOF.exe
             ModuleDefMD typeModule = ModuleDefMD.Load(typeof(EOFAntiTamper).Module);

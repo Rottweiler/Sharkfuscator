@@ -1,6 +1,7 @@
 ﻿using Fclp;
-using Sharkfuscator.Methods;
+using Sharkfuscator.Protections;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -16,6 +17,8 @@ namespace Sharkfuscator
 
     class Program
     {
+        static List<iProtection> protections = new List<iProtection>();
+
         static void Main(string[] args)
         {
             PrintHello();
@@ -55,21 +58,17 @@ namespace Sharkfuscator
                 fs.CopyTo(base_stream);
 
                 /*
-                 * Strip DOS header
+                 * Perform protections
                  */
                 if (arguments.strip_dos_header)
-                {
-                    Console.WriteLine("Stripping DOS header..");
-                    DOS_Stripper.StripDOSHeader(base_stream);
-                }
-
-                /*
-                 * EOF anti-tamper
-                 */
+                    protections.Add(new DOSModifier());
                 if (arguments.eof_anti_tamper)
+                    protections.Add(new EOF_Anti_Tamper());
+
+                foreach (var protection in protections)
                 {
-                    Console.WriteLine("Applying EOF anti-tamper by XenocodeRCE..");
-                    EOF_Anti_Tamper.InjectAntiTamper(base_stream);
+                    Console.WriteLine(protection.init_message);
+                    protection.Protect(base_stream);
                 }
 
                 /*

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Sharkfuscator.Methods.Stubs
+namespace Sharkfuscator.Protections.Stubs
 {
     class EOFAntiTamper
     {
