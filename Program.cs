@@ -7,6 +7,10 @@ using System.Text;
 
 namespace Sharkfuscator
 {
+
+    /// <summary>
+    /// For command-line arguments
+    /// </summary>
     public class ApplicationArguments
     {
         public string input_file { get; set; }
@@ -15,6 +19,9 @@ namespace Sharkfuscator
         public bool eof_anti_tamper { get; set; }
     }
 
+    /// <summary>
+    /// Parameter management
+    /// </summary>
     class Program
     {
         static List<iProtection> protections = new List<iProtection>();
@@ -45,12 +52,22 @@ namespace Sharkfuscator
             if (result.HasErrors == false)
             {
                 App(parser.Object);
+            }else
+            {
+                PrintHelp();
             }
         }
 
+        /// <summary>
+        /// Main program functionality
+        /// </summary>
+        /// <param name="o"></param>
         static void App(object o)
         {
             var arguments = (ApplicationArguments)o;
+
+            if (arguments.output_file == string.Empty || arguments.output_file == null)
+                arguments.output_file = arguments.input_file + ".shark.exe";
 
             using (MemoryStream base_stream = new MemoryStream())
             using (FileStream fs = new FileStream(arguments.input_file, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
@@ -90,11 +107,15 @@ namespace Sharkfuscator
 
                 Console.WriteLine("Done");
             }
-            Console.Read();
         }
 
+        /// <summary>
+        /// Print hello
+        /// </summary>
         static void PrintHello()
         {
+            Console.Clear();
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(" ____  _                _     __                     _             ");
             sb.AppendLine("/ ___|| |__   __ _ _ __| | __/ _|_   _ ___  ___ __ _| |_ ___  _ __ ");
@@ -103,6 +124,17 @@ namespace Sharkfuscator
             sb.AppendLine("|____/|_| |_|\\__,_|_|  |_|\\_\\_|  \\__,_|___/\\___\\__,_|\\__\\___/|_|   ");
             sb.AppendLine("                                                                   ");
             sb.AppendLine("Project repository can be found at https://github.com/Rottweiler/Sharkfuscator/");
+            Console.WriteLine(sb.ToString());
+        }
+
+        /// <summary>
+        /// Print help
+        /// </summary>
+        static void PrintHelp()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Invalid usage!!1");
+            sb.AppendLine("Here is how you do it, scrub: ./Sharkfuscator.exe -i INPUT_FILE.exe -o OUTPUT_FILE.exe");
             Console.WriteLine(sb.ToString());
         }
     }
