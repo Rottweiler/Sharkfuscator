@@ -6,7 +6,6 @@ build:
   project: /Sharkfuscator.csproj
   verbosity: minimal
 install:
-  - cd Sharkfuscator
   - git submodule update --init --recursive
 artifacts:
   - path: Release/
