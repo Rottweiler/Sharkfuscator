@@ -7,34 +7,44 @@ namespace Sharkfuscator.Protections
     {
         public string name
         {
-            get
-            {
-                return "MS-DOS Header remover";
-            }
+            get { return "MS-DOS Header remover"; }
         }
 
         public string description
         {
-            get
-            {
-                return "Strips the MS-DOS header and the little text from the executable.";
-            }
+            get { return "Strips the MS-DOS header and the little text from the executable."; }
         }
 
         public string author
         {
-            get
-            {
-                return "Rottweiler";
-            }
+            get { return "Rottweiler"; }
         }
 
         public string init_message
         {
-            get
-            {
-                return "Stripping DOS header..";
-            }
+            get { return "Stripping DOS header.."; }
+        }
+
+        public char command_short
+        {
+            get { return 'd'; }
+        }
+
+        public string command_long
+        {
+            get { return "strip-dos"; }
+        }
+
+        private bool _enabled;
+        public bool enabled
+        {
+            get { return _enabled; }
+            set { _enabled = value; }
+        }
+
+        public bool enabled_default
+        {
+            get { return false; }
         }
 
         public void Protect(Stream stream)
@@ -73,10 +83,10 @@ namespace Sharkfuscator.Protections
             return data.Length;
         }
 
-        private  UInt32 offset_lfanew = 0x3C;
-        private  int length_lfanew = sizeof(UInt32);
+        private UInt32 offset_lfanew = 0x3C;
+        private int length_lfanew = sizeof(UInt32);
 
-        private  UInt32 offset_magic = 0x00;
-        private  int length_magic = sizeof(UInt16);
+        private UInt32 offset_magic = 0x00;
+        private int length_magic = sizeof(UInt16);
     }
 }

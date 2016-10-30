@@ -8,6 +8,10 @@ namespace Sharkfuscator
         string description { get;  }
         string author { get; }
         string init_message { get; }
+        char command_short { get; }
+        string command_long { get; }
+        bool enabled { get; set; }
+        bool enabled_default { get; }
         void Protect(Stream stream);
     }
 }

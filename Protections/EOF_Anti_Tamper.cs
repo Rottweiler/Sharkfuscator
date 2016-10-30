@@ -18,34 +18,44 @@ namespace Sharkfuscator.Protections
     {
         public string description
         {
-            get
-            {
-                return "Anti-tamper protection coded by XenoCodeRCE. Adds hash to EOF and compares it on run.";
-            }
+            get { return "Anti-tamper protection coded by XenoCodeRCE. Adds hash to EOF and compares it on run."; }
         }
 
         public string name
         {
-            get
-            {
-                return "EOF Anti-Tamper";
-            }
+            get { return "EOF Anti-Tamper"; }
         }
 
         public string author
         {
-            get
-            {
-                return "XenoCodeRCE";
-            }
+            get { return "XenoCodeRCE"; }
         }
 
         public string init_message
         {
-            get
-            {
-                return "Injecting anti-tamper class..";
-            }
+            get { return "Injecting anti-tamper class.."; }
+        }
+
+        public char command_short
+        {
+            get { return 'e'; }
+        }
+
+        public string command_long
+        {
+            get { return "eof-anti-tamper"; }
+        }
+
+        private bool _enabled;
+        public bool enabled
+        {
+            get { return _enabled; }
+            set { _enabled = value; }
+        }
+
+        public bool enabled_default
+        {
+            get { return true; }
         }
 
         public void Protect(Stream stream)

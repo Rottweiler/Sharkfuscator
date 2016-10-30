@@ -15,8 +15,6 @@ namespace Sharkfuscator
     {
         public string input_file { get; set; }
         public string output_file { get; set; }
-        public bool strip_dos_header { get; set; }
-        public bool eof_anti_tamper { get; set; }
     }
 
     /// <summary>
@@ -25,34 +23,36 @@ namespace Sharkfuscator
     class Program
     {
         static List<iProtection> protections = new List<iProtection>();
+        static ApplicationArguments arguments = new ApplicationArguments();
 
         static void Main(string[] args)
         {
             PrintHello();
+            LoadProtections();
 
-            var parser = new FluentCommandLineParser<ApplicationArguments>();
+            var parser = new FluentCommandLineParser();
 
-            parser.Setup(arg => arg.input_file)
-             .As('i', "input")
+            parser.Setup<string>('i', "input")
+             .Callback(value => arguments.input_file = value)
              .Required();
 
-            parser.Setup(arg => arg.output_file)
-             .As('o', "output");
+            parser.Setup<string>('o', "output")
+             .Callback(value => arguments.output_file = value);
 
-            parser.Setup(arg => arg.strip_dos_header)
-             .As('d', "strip-dos-header")
-             .SetDefault(true);
-
-            parser.Setup(arg => arg.eof_anti_tamper)
-             .As('e', "eof-anti-tamper")
-             .SetDefault(true);
+            foreach (var protection in protections)
+            {
+                parser.Setup<bool>(protection.command_short, protection.command_long)
+                 .Callback(value => protection.enabled = value)
+                 .SetDefault(protection.enabled_default);
+            }
 
             var result = parser.Parse(args);
 
             if (result.HasErrors == false)
             {
-                App(parser.Object);
-            }else
+                App(arguments);
+            }
+            else
             {
                 PrintHelp();
             }
@@ -77,15 +77,13 @@ namespace Sharkfuscator
                 /*
                  * Perform protections
                  */
-                if (arguments.strip_dos_header)
-                    protections.Add(new DOSModifier());
-                if (arguments.eof_anti_tamper)
-                    protections.Add(new EOF_Anti_Tamper());
-
                 foreach (var protection in protections)
                 {
-                    Console.WriteLine(protection.init_message);
-                    protection.Protect(base_stream);
+                    if (protection.enabled)
+                    {
+                        Console.WriteLine(protection.init_message);
+                        protection.Protect(base_stream);
+                    }
                 }
 
                 /*
@@ -99,14 +97,23 @@ namespace Sharkfuscator
                     fs_out.Flush();
                 }
 
-                if (arguments.eof_anti_tamper)
-                {
-                    Console.WriteLine("Appending final anti-tamper hash..");
-                    EOF_Anti_Tamper.InjectHash(arguments.output_file);
-                }
+                /*
+                 * Requires a system that passes current protection state to
+                 * the iProtection.cs (PRE, DURING, POST), and this would
+                 * be a POST protection
+                 */
+                Console.WriteLine("Appending final anti-tamper hash..");
+                EOF_Anti_Tamper.InjectHash(arguments.output_file);
+
 
                 Console.WriteLine("Done");
             }
+        }
+
+        static void LoadProtections()
+        {
+            protections.Add(new EOF_Anti_Tamper());
+            protections.Add(new DOSModifier());
         }
 
         /// <summary>
