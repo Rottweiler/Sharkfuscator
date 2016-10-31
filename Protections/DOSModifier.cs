@@ -47,9 +47,14 @@ namespace Sharkfuscator.Protections
             get { return false; }
         }
 
-        public void Protect(Stream stream)
+        public bool Protect(ProtectorState state, string output_filename, Stream stream)
         {
-            StripDOSHeader(stream);
+            if (state == ProtectorState.During)
+            {
+                StripDOSHeader(stream);
+                return true;
+            }
+            return false;
         }
 
         private void StripDOSHeader(Stream stream)
@@ -63,9 +68,6 @@ namespace Sharkfuscator.Protections
             WriteArray(offset_magic, magic, stream);
             WriteArray(offset_lfanew, lfanew, stream);
             WriteArray(0x4e, new byte[39], stream); //override This program can not be run in DOS mode.
-
-            //reset stream position
-            stream.Position = 0;
         }
 
         private byte[] ReadArray(UInt32 offset, int length, Stream stream)

@@ -75,16 +75,14 @@ namespace Sharkfuscator
                 fs.CopyTo(base_stream);
 
                 /*
-                 * Perform protections
+                 * Perform pre-protections
                  */
-                foreach (var protection in protections)
-                {
-                    if (protection.enabled)
-                    {
-                        Console.WriteLine(protection.init_message);
-                        protection.Protect(base_stream);
-                    }
-                }
+                PerformProtections(ProtectorState.Pre, arguments.output_file, base_stream);
+
+                /*
+                 * Perform during-protections
+                 */
+                PerformProtections(ProtectorState.During, arguments.output_file, base_stream);
 
                 /*
                  * Write output
@@ -98,15 +96,25 @@ namespace Sharkfuscator
                 }
 
                 /*
-                 * Requires a system that passes current protection state to
-                 * the iProtection.cs (PRE, DURING, POST), and this would
-                 * be a POST protection
+                 * Perform post-protections
                  */
-                Console.WriteLine("Appending final anti-tamper hash..");
-                EOF_Anti_Tamper.InjectHash(arguments.output_file);
+                PerformProtections(ProtectorState.Post, arguments.output_file, base_stream);
 
 
                 Console.WriteLine("Done");
+            }
+        }
+
+        static void PerformProtections(ProtectorState state, string output_filename, Stream stream)
+        {
+            foreach (var protection in protections)
+            {
+                if (protection.enabled)
+                {
+                    if (protection.Protect(state, output_filename, stream))
+                        Console.WriteLine(protection.init_message);
+                    stream.Position = 0;
+                }
             }
         }
 

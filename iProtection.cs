@@ -12,6 +12,6 @@ namespace Sharkfuscator
         string command_long { get; }
         bool enabled { get; set; }
         bool enabled_default { get; }
-        void Protect(Stream stream);
+        bool Protect(ProtectorState state, string output_filename, Stream stream);
     }
 }

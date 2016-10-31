@@ -33,7 +33,7 @@ namespace Sharkfuscator.Protections
 
         public string init_message
         {
-            get { return "Injecting anti-tamper class.."; }
+            get { return "Performing anti-tamper.."; }
         }
 
         public char command_short
@@ -58,9 +58,21 @@ namespace Sharkfuscator.Protections
             get { return true; }
         }
 
-        public void Protect(Stream stream)
+        public bool Protect(ProtectorState state, string output_filename, Stream stream)
         {
-            InjectAntiTamper(stream);
+            if (state == ProtectorState.During)
+            {
+                InjectAntiTamper(stream);
+                return true;
+            }
+               
+            if (state == ProtectorState.Post)
+            {
+                InjectHash(output_filename);
+                return true;
+            }
+               
+            return false;
         }
 
         private void InjectAntiTamper(Stream stream)
@@ -72,12 +84,6 @@ namespace Sharkfuscator.Protections
 
             stream.Position = 0;
             mod.Write(stream);
-
-            //byte[] hash = stream.CalculateHash();
-            //stream.Seek(0L, SeekOrigin.End);
-            //stream.Write(hash, 0, hash.Length);
-
-            stream.Position = 0;
         }
 
         public static void InjectHash(Stream stream)
@@ -85,7 +91,6 @@ namespace Sharkfuscator.Protections
             byte[] hash = stream.CalculateHash();
             stream.Seek(0L, SeekOrigin.End);
             stream.Write(hash, 0, hash.Length);
-            stream.Position = 0;
         }
 
         public static void InjectHash(string filename)
