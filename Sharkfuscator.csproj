@@ -41,18 +41,21 @@
   <ItemGroup>
     <Compile Include="ConfuserEx\InjectHelper.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="iProtection.cs" />
+    <Compile Include="PluginLoader.cs" />
     <Compile Include="Protections\DOSModifier.cs" />
     <Compile Include="Protections\EOF_Anti_Tamper.cs" />
     <Compile Include="Protections\Stubs\EOFAntiTamper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtectorState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Plugin\Plugin.csproj">
+      <Project>{7ce67c63-32f3-414c-8794-64fc80e0728b}</Project>
+      <Name>Plugin</Name>
+    </ProjectReference>
     <ProjectReference Include="dnlib\src\dnlib.csproj">
       <Project>{fdfc1237-143f-4919-8318-4926901f4639}</Project>
       <Name>dnlib</Name>

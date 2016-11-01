@@ -1,5 +1,6 @@
 ﻿using Fclp;
 using Sharkfuscator.Protections;
+using Plugin;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +23,8 @@ namespace Sharkfuscator
     /// </summary>
     class Program
     {
+        static string plugin_folder = "plugins\\";
+        static PluginLoader plugin_loader = new PluginLoader(plugin_folder);
         static List<iProtection> protections = new List<iProtection>();
         static ApplicationArguments arguments = new ApplicationArguments();
 
@@ -122,6 +125,7 @@ namespace Sharkfuscator
         {
             protections.Add(new EOF_Anti_Tamper());
             protections.Add(new DOSModifier());
+            plugin_loader.LoadPlugins(protections);
         }
 
         /// <summary>
