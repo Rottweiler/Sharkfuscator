@@ -1,0 +1,6 @@
+[submodule "dnlib"]
+	path = dnlib
+	url = https://github.com/yck1509/dnlib
+[submodule "fluent-command-line-parser"]
+	path = fluent-command-line-parser
+	url = https://github.com/fclp/fluent-command-line-parser
