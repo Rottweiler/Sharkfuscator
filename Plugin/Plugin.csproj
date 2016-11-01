@@ -4,17 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FE7761D7-7643-4E54-8B33-A33122983739}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{7CE67C63-32F3-414C-8794-64FC80E0728B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sharkfuscator</RootNamespace>
-    <AssemblyName>Sharkfuscator</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>Plugin</RootNamespace>
+    <AssemblyName>Plugin</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,34 +34,17 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfuserEx\InjectHelper.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="PluginLoader.cs" />
-    <Compile Include="Protections\DOSModifier.cs" />
-    <Compile Include="Protections\EOF_Anti_Tamper.cs" />
-    <Compile Include="Protections\Stubs\EOFAntiTamper.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="iProtection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtectorState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="dnlib\src\dnlib.csproj">
+    <ProjectReference Include="..\dnlib\src\dnlib.csproj">
       <Project>{fdfc1237-143f-4919-8318-4926901f4639}</Project>
       <Name>dnlib</Name>
-    </ProjectReference>
-    <ProjectReference Include="fluent-command-line-parser\FluentCommandLineParser\FluentCommandLineParser.csproj">
-      <Project>{74cdfa61-81d8-40f2-b536-949baba15d3e}</Project>
-      <Name>FluentCommandLineParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="Plugin\Plugin.csproj">
-      <Project>{7ce67c63-32f3-414c-8794-64fc80e0728b}</Project>
-      <Name>Plugin</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
